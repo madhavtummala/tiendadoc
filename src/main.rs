@@ -74,7 +74,7 @@ fn run_bot(api: &Api, conn: &Connection, vars: (String, String)) {
 }
 
 fn main() -> Result<()> {
-    let conn = database_utils::get_connection("tiendadoc.db")?;
+    let conn = database_utils::get_connection("/config/tiendadoc.db")?;
     let vars = get_env_variables();
     let api = Api::new(&vars.0);
     run_bot(&api, &conn, vars);
