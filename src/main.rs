@@ -29,6 +29,7 @@ fn run_bot(api: &Api, conn: &Connection, vars: (String, String)) {
                         // check if the message has a command
                         let command =  msg.text.as_ref();
                         if command.is_none() {continue;}
+                        if !command.unwrap().starts_with("/") {continue;}
                         // calculate the reply, performing the commands
                         let reply = match command.unwrap().split(' ').next().unwrap() {
                             "/start" => match reply_start(msg, &vars.1) {
