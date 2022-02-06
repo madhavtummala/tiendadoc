@@ -36,10 +36,11 @@ jobs:
       - name: build rust app
         run: cargo build --${{ env.CARGO_PROFILE }} --verbose
         
-      - name: copy executable
+      - name: create build context
         run: |
           mkdir docker
           cp target/${{ env.CARGO_PROFILE }}/tiendadoc docker/
+          cp Dockerfile docker/
       
       - name: setup docker buildx
         uses: docker/setup-buildx-action@v1
