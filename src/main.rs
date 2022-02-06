@@ -27,7 +27,6 @@ fn run_bot(api: &Api, conn: &Connection, vars: (String, String, String)) {
             Ok(response) => {
                 for update in response.result {
                     if let Some(msg) = update.message {
-                        println!("{:?}",msg);
                         // check if the message has a command
                         let command =  msg.text.as_ref();
                         let chat_filter = chats.is_empty() ||
@@ -48,7 +47,7 @@ fn run_bot(api: &Api, conn: &Connection, vars: (String, String, String)) {
                                 "/help" => reply_help(msg),
                                 "/add" => match authenticated {
                                     true => {
-                                        reply_add(msg, conn, api, &vars.0)
+                                        reply_add(msg, conn, api)
                                     },
                                     false => reply_auth(msg)
                                 }
@@ -84,7 +83,7 @@ fn run_bot(api: &Api, conn: &Connection, vars: (String, String, String)) {
 }
 
 fn main() -> Result<()> {
-    let conn = database_utils::get_connection("/config/tiendadoc.db")?;
+    let conn = database_utils::get_connection("/usr/app/config/tiendadoc.db")?;
     let vars = get_env_variables();
     let api = Api::new(&vars.0);
     run_bot(&api, &conn, vars);

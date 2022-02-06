@@ -52,7 +52,7 @@ pub fn reply_help(message: Message) -> Option<SendMessageParams> {
     prepare_reply(message, reply)
 }
 
-pub fn reply_add(message: Message, conn: &Connection, _api: &Api, bot_token: &String) -> Option<SendMessageParams> {
+pub fn reply_add(message: Message, conn: &Connection, _api: &Api) -> Option<SendMessageParams> {
     let mut insert_keyword
         = conn.prepare("insert into keys (keyword, file_id) values (?1, ?2)").ok()?;
     let mut search_keyword
@@ -126,19 +126,19 @@ pub fn reply_search(message: Message, conn: &Connection, api: &Api) -> Option<Se
                     .reply_to_message_id(message.message_id)
                     .document(frankenstein::api_params::File::String(file.to_string()))
                     .build().unwrap();
-                if let Err(e) = api.send_document(&send_document_params) {
+                if let Err(_e) = api.send_document(&send_document_params) {
                     let send_photo_params = SendPhotoParamsBuilder::default()
                         .chat_id(message.chat.id)
                         .reply_to_message_id(message.message_id)
                         .photo(frankenstein::api_params::File::String(file.to_string()))
                         .build().unwrap();
-                    if let Err(e) = api.send_photo(&send_photo_params) {
+                    if let Err(_e) = api.send_photo(&send_photo_params) {
                         let send_video_params = SendVideoParamsBuilder::default()
                             .chat_id(message.chat.id)
                             .reply_to_message_id(message.message_id)
                             .video(frankenstein::api_params::File::String(file.to_string()))
                             .build().unwrap();
-                        if let Err(e) = api.send_video(&send_video_params) {
+                        if let Err(_e) = api.send_video(&send_video_params) {
                             let send_audio_params = SendAudioParamsBuilder::default()
                                 .chat_id(message.chat.id)
                                 .reply_to_message_id(message.message_id)
@@ -168,9 +168,12 @@ pub fn reply_start(message: Message, password: &String) -> (Option<SendMessagePa
             reply = "wrong password";
             status = false;
         }
-    } else {
+    } else if !password.is_empty() {
         reply = "please enter a password with /start";
         status = false;
+    } else {
+        reply = "successfully authenticated";
+        status = true;
     }
     (prepare_reply(message, reply), status)
 }
