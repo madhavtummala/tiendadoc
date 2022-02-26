@@ -67,12 +67,12 @@ fn run_bot(api: &Api, conn: &Connection, vars: (String, String, String)) {
                                 None => ()
                             }
                         }
-                        // check for only next messages
-                        update_params = update_params_builder
-                            .offset(update.update_id + 1)
-                            .build()
-                            .unwrap();
                     }
+                    // check for only next messages
+                    update_params = update_params_builder
+                        .offset(update.update_id + 1)
+                        .build()
+                        .unwrap();
                 }
             }
             Err(error) => {
